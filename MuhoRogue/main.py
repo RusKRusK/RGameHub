@@ -191,7 +191,7 @@ class player:
 # メインのクラス
 class App:
 	def __init__(self):
-		pyxel.init(128, 128, title="NjoguGeorgeMuhoroguelike", fps=60)
+		pyxel.init(128, 128, title="MuhoRogue", fps=60)
 		pyxel.load("./resauce.pyxres")
 		pyxel.images[1].blt(0, 0, 0, 0, 8 * 2, 8 * 5, 8 * 5)
 		for y in range(5):
