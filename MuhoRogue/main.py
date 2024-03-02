@@ -26,6 +26,8 @@ enemies = []
 chests = []
 herbs = []
 stairs = []
+signs = []
+textboxes = []
 
 # サウンドの番号
 SND_STEP = 63
@@ -47,11 +49,13 @@ def set_tile(tile_x, tile_y, tile):
 
 # タイルからオブジェクトの配置を行う関数
 def spawn_obj():
-	for y in range(pyxel.height / 8):
-		for x in range(pyxel.width / 8):
-			tile = get_tile(x,y)
+	for y in range(16):
+		for x in range(16):
+			tile = get_tile(x, y)
 #			if tile == TILE_CHEST:
 #				chests.append(chest(x * 8, y * 8))
+			if tile == TILE_SIGN:
+				signs.append(sign(x, y, "Sorry!\nThis is still\na prototype version..."))
 
 # テキストボックスを出す関数
 def draw_textbox(x, y, w, h, t):
@@ -71,10 +75,45 @@ class textbox:
 			pass
 		elif 0 <= self.type < 4:
 			pass
-	
+
+		if self.time >= self.lim:
+			textboxes.remove(self)
+			del self
 	def draw(self):
 		draw_textbox(self.x, self.y, self.w, self.h, self.txt)
 
+# 看板クラス
+class sign:
+	def __init__(self, x, y, txt):
+		self.x, self.y = x, y
+		self.txt = txt
+		self.line = len(self.txt.splitlines())
+		self.word = [len(line) for line in self.txt.splitlines()]
+		self.width = 4 * max(self.word) - 1 + 6
+		self.height = 6 * self.line - 1 + 6
+		self.time = 300
+		self.collision = False
+
+	def update(self):
+		if self.collision == True:
+			self.collision = False
+			self.summon_textbox()
+
+	def draw(self):
+		pyxel.blt(self.x * 8, self.y * 8, 1, TILE_SIGN[0] * 8, TILE_SIGN[1] * 8 - 16, 8, 8, COL_T)
+
+	def summon_textbox(self):
+		box_x = self.x * 8 + 4 - self.width // 2 - 1
+		box_y = self.y * 8 - self.height - 1
+		if box_x < 0:
+			box_x = 0
+		if box_y < 0:
+			box_y = 0
+		if box_x + self.width >= pyxel.width:
+			box_x = pyxel.width - self.width
+		if box_y + self.height >= pyxel.height:
+			box_y = pyxel.height - self.height
+		textboxes.append(textbox(box_x, box_y, self.width, self.height, self.txt, -1, self.time))
 
 
 # プレイヤークラス
@@ -143,6 +182,16 @@ class player:
 			if pyxel.btn(key_dir[i][j]) or self.key_buf == key_dir[i][j]:
 				self.face = i
 				self.key_buf = -1
+				self.t = 0
+
+				for p in signs: # 看板の処理
+					if dest_x == p.x and dest_y == p.y:
+						p.collision = True
+						self.set_o(i, 1, 1, 0, 0)
+						pyxel.play(3, SND_CONV)
+						self.upd = self.update_bump
+						return True
+
 				if dest_tile in TILE_WALL: # 壁の処理
 					self.set_o(i, 1, 1, 0, 0)
 					pyxel.play(3, SND_WALL)
@@ -165,20 +214,14 @@ class player:
 					self.set_o(i, -1,-1,-1,-1)
 					set_tile(dest_x, dest_y, TILE_FLOOR[0])
 					pyxel.play(3, SND_GET)
-					self.upd = self.update_turn
-				
-				# elif dest_tile == TILE_SIGN: # 看板
-				# 	self.set_o(i, 1, 1, 0, 0)
-				# 	pyxel.play(3, SND_CONV)
-				# 	self.upd = self.update_bump
+					self.upd = self.update_turn					
 				
 				else:
 					self.x, self.y = dest_x, dest_y
 					self.set_o(i, -1,-1,-1,-1)
 					pyxel.play(2, SND_STEP)
 					self.upd = self.update_turn
-				
-				self.t = 0
+
 				return True
 			
 		return False
@@ -196,37 +239,57 @@ class App:
 		pyxel.images[1].blt(0, 0, 0, 0, 8 * 2, 8 * 5, 8 * 5)
 		for y in range(5):
 			for x in range(5):
-				pyxel.images[0].blt(x * 8, 16 + y * 8, 0, 8, 0, 8, 8)
-				pyxel.images[0].blt(x * 8, 16 + y * 8, 1, x * 8, y * 8, 8, 8, COL_T)
+				pyxel.images[0].blt(x * 8, y * 8 + 16, 0, 8, 0, 8, 8)
+				pyxel.images[0].blt(x * 8, y * 8 + 16, 1, x * 8, y * 8, 8, 8, COL_T)
 		pyxel.images[0].blt(TILE_SIGN[0] * 8, TILE_SIGN[1] * 8, 0, 8, 0, 8, 8)
 		self.upd = self.update_game
 		self.drw = self.draw_game
 		global player
 		player = player(2, 2)
+		spawn_obj()
+		
+		self.muho = 0
+
 		pyxel.run(self.update, self.draw)
 
 	def update(self):
 		self.upd()
+		if self.muho == 0 and pyxel.btn(pyxel.KEY_J):
+			self.muho = 1
+
 
 	def draw(self):
 		self.drw()
+		if self.muho == 1:
+			pyxel.blt(0,0,1,0,0,128,128)
 
 	# 通常のupdate処理
 	def update_game(self):
 		
+
+		for i in signs:
+			i.update()
+
 		# プレイヤーの処理
 		player.update()
+
+		for i in textboxes:
+			i.update()
+
 
 	def draw_game(self):
 		pyxel.cls(0)
 		# タイルマップ描画
 		pyxel.bltm(0, 0, 0, 0, 0, 128, 128, COL_T)
 		
+		for i in signs:
+			i.draw()
+
 		# プレイヤーの描画
 		player.draw()
 		
-		# draw_textbox(10,10,53,17,"test message\n line 2")
-
+		for i in textboxes:
+			i.draw()
 
 # ゲームオーバー時
 	def update_gameover(self):
