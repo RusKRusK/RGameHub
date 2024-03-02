@@ -59,17 +59,22 @@ def draw_textbox(x, y, w, h, t):
 	pyxel.rectb(x, y, w, h, 7)
 	pyxel.text(x+3, y+3, t, 7)
 
-# テキストボックスのクラス
-class textbox1:
-	def __init__(self, x, y, w, h, t):
-		
-		pass
-	
+# テキストボックスの親クラス
+class textbox:
+	def __init__(self, x, y, w, h, txt, type, lim):
+		self.x, self.y, self.w, self.h, self.txt, self.type, self.lim = x, y, w, h, txt, type, lim
+		self.time = 0
+		self.ox = self.oy = 0
 	def update(self):
-		pass
+		self.time += 1
+		if self.type == -1:
+			pass
+		elif 0 <= self.type < 4:
+			pass
 	
 	def draw(self):
-		pass
+		draw_textbox(self.x, self.y, self.w, self.h, self.txt)
+
 
 
 # プレイヤークラス
@@ -162,10 +167,10 @@ class player:
 					pyxel.play(3, SND_GET)
 					self.upd = self.update_turn
 				
-				elif dest_tile == TILE_SIGN: # 看板
-					self.set_o(i, 1, 1, 0, 0)
-					pyxel.play(3, SND_CONV)
-					self.upd = self.update_bump
+				# elif dest_tile == TILE_SIGN: # 看板
+				# 	self.set_o(i, 1, 1, 0, 0)
+				# 	pyxel.play(3, SND_CONV)
+				# 	self.upd = self.update_bump
 				
 				else:
 					self.x, self.y = dest_x, dest_y
@@ -193,6 +198,7 @@ class App:
 			for x in range(5):
 				pyxel.images[0].blt(x * 8, 16 + y * 8, 0, 8, 0, 8, 8)
 				pyxel.images[0].blt(x * 8, 16 + y * 8, 1, x * 8, y * 8, 8, 8, COL_T)
+		pyxel.images[0].blt(TILE_SIGN[0] * 8, TILE_SIGN[1] * 8, 0, 8, 0, 8, 8)
 		self.upd = self.update_game
 		self.drw = self.draw_game
 		global player
@@ -219,7 +225,7 @@ class App:
 		# プレイヤーの描画
 		player.draw()
 		
-		draw_textbox(10,10,53,17,"test message\n line 2")
+		# draw_textbox(10,10,53,17,"test message\n line 2")
 
 
 # ゲームオーバー時
