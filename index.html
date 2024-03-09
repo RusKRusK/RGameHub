@@ -6,21 +6,42 @@
 <style>
     body {
         color: rgb(244, 250, 192);
-        text-align: center;
+        text-align: left;
         background-color: rgb(189, 126, 68);
+    }
+    .marquee-anim {
+        overflow: hidden;
+    }
+
+    .marquee-span {
+        display: inline-block;
+        padding-left: 100%;
+        white-space: nowrap;
+        animation: marquee 5s linear infinite;
+    }
+
+    @keyframes marquee {
+        from {
+            transform: translate(0);
+        }
+        to {
+            transform: translate(-100%);
+        }
     }
 </style>
 </head>
 <body>
-<h1>置き場</h1>
+<h1 Align = "center">置き場</h1>
 <p>RusKが遊んだ形跡を置く場所。たまに来るとちょっとずつ進捗があるかも...</p>
-<table border="0" cellspacing="0" cellpadding="0" align = "right">
-	<tr>
-		<td align="center">
-				<img src="http://www.rays-counter.com/d1278_f6_022/65ec60b1867ce/" alt="アクセスカウンター" border="0">
-		</td>
-	</tr>
-</table>
+<div class="marquee-anim">
+    <img src="images/apple.png"
+    style="
+    image-rendering: pixelated;
+    width: 128px;
+    height: 128px;
+    " class="marquee-span">
+</div>
+
 <div Align="left">    
     <ul>
         <li>ゲームみたいな何か</li>
@@ -28,12 +49,15 @@
             <li><a href="MuhoRogue/game.html">ローグライク(つくりかけ)</a></li>
         </ul>
         <br>
-        <li></li>
+        <!-- <li></li>
         <ul>
 
-        </ul>
+        </ul> -->
     </ul>
 </div>
+<h2>リンクいろいろ</h2>
+<a href="https://twitter.com/mathtya">X(旧Twitter)</a>(現在動いてません)<br>
+<a href="https://dotpict.net/users/1310364">ドットピクト</a>
 </body>
-<footer>(c) 2024 RusK</footer>
+<footer Align="center">(c) 2024 RusK</footer>
 </html>
