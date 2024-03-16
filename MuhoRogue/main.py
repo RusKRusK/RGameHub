@@ -248,25 +248,23 @@ class App:
 		player = player(2, 2)
 		spawn_obj()
 		
-		self.muho = 0
+		self.muho = 0 # デバッグ用フラグ
 
 		pyxel.run(self.update, self.draw)
 
 	def update(self):
 		self.upd()
-		if self.muho == 0 and pyxel.btn(pyxel.KEY_J):
+		if self.muho == 0 and pyxel.btn(pyxel.KEY_J): # デバッグ用
 			self.muho = 1
 
 
 	def draw(self):
 		self.drw()
-		if self.muho == 1:
+		if self.muho == 1: # デバッグ用
 			pyxel.blt(0,0,1,0,0,128,128)
 
 	# 通常のupdate処理
 	def update_game(self):
-		
-
 		for i in signs:
 			i.update()
 
