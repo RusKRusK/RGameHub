@@ -9,6 +9,13 @@ a {
     color: red;
 }
 
+details {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    border: solid 2px rgb(211, 231, 243);
+}
+
 .marquee-anim {
     overflow: hidden;
 }
