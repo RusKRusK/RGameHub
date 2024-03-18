@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>RusKPageHub</title>
+<meta charset="utf-8">
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/style.css" type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="logo">KaTeXのテスト</div>
+</header>
+<ol>
+    <li>自然数 $n$ は以下を満たします．</li>
+    <ul>
+        <li>$n$ は $508$ 桁の数字．</li>
+        <li>各桁の数の和が $2023$ である．</li>
+        <li>隣り合う $2$ つの桁について，右の桁の数字は左の桁の数字以上である．</li>
+    </ul>
+    $9n$ を $10$ 進数で表現したときの各桁の和としてあり得る最大値を求めてください．
+</ol>
+<footer Align="center">(c) 2024 RusK</footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {delimiters: [
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false}
+        ]});
+    });
+</script>
+</body>
+</html>
