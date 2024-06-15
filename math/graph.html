@@ -9,13 +9,33 @@
       border: 1px solid lightgray;
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
 </head>
 <body>
 <h1>グラフ描画</h1>
 <textarea name="example" cols="50" rows="10" id="graphInfo">
+5
+1 2
+1 4
+2 3
+3 5
+5 1
 </textarea><input type="button" value="描画する！" id="drawButton">
 <div id="mynetwork"></div>
+<div style="padding: 10px; margin-bottom: 10px; border: 5px double #333333;">
+無向グラフを描画します．<br>
+頂点数 $n$ の無向グラフの各頂点 $a_1,a_2,\cdots,a_n$ について，<br><br>
+$n$<br>
+$a_{i_1}$ $a_{j_1}$<br>
+$a_{i_2}$ $a_{j_2}$<br>
+$\vdots$<br>
+$a_{i_m}$ $a_{j_m}$<br><br>
+の形式で入力してください．<br>ただし，$1\leq i_1,i_2,\cdots,i_m,j_1,j_2,\cdots,j_m\leq n$とします．<br>
+2行目以降の頂点のペアは,2つの頂点が辺で結ばれていることを表します.
 
+</div>
 <script type="text/javascript">
 function drawButtonClick(){
   
@@ -76,7 +96,12 @@ let drawButton = document.getElementById("drawButton");
 drawButton.addEventListener('click', drawButtonClick);
 
 let container = document.getElementById('mynetwork');
-  
+document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {delimiters: [
+    {left: "\\[", right: "\\]", display: true},
+    {left: "$", right: "$", display: false}
+  ]});
+});
   
 </script>
 </body>
