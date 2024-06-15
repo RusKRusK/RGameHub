@@ -11,56 +11,73 @@
   </style>
 </head>
 <body>
+<h1>グラフ描画</h1>
+<textarea name="example" cols="50" rows="10" id="graphInfo">
+</textarea><input type="button" value="描画する！" id="drawButton">
 <div id="mynetwork"></div>
+
 <script type="text/javascript">
-  var nodes = new vis.DataSet([
-    { id: 1, color: '#000000', size: 5, x: 0, y:0, fixed: true },
-    { id: 2, color: '#000000', size: 5, x: 50, y:0, fixed: true },
-    { id: 3, color: '#000000', size: 5, x: 100, y:0, fixed: true },
-    { id: 4, color: '#000000', size: 5, x: 100, y:50, fixed: true },
-    { id: 5, color: '#000000', size: 5, x: 50, y:50, fixed: true },
-    ]);
+function drawButtonClick(){
+  
+  const lines = graphInfo.value.trim().split('\n');
+  const n = parseInt(lines[0], 10);
+  const edgesArray = lines.slice(1).map(line => line.split(' ').map(Number));
 
-  var edges = new vis.DataSet([
-    { from: 1, to: 2, color: { color: '#000000' }, smooth: false },
-    { from: 2, to: 3, color: { color: '#000000' }, smooth: false },
-    { from: 2, to: 5, color: { color: '#000000' }, smooth: false },
-    { from: 3, to: 4, color: { color: '#000000' }, smooth: false },
-    { from: 4, to: 5, color: { color: '#000000' }, smooth: false }
-  ]);
+  const nodes = new vis.DataSet([]);
+  const edges = new vis.DataSet([]);
 
-  var container = document.getElementById('mynetwork');
-  var data = {
+  // ノードの追加
+  for (let i = 1; i <= n; i++) {
+      nodes.add({id: i});
+  }
+
+  // エッジの追加
+  for (let edge of edgesArray) {
+      edges.add({from: edge[0], to: edge[1]});
+  }
+
+  let data = {
     nodes: nodes,
     edges: edges
   };
-  var options = {
+
+  let options = {
     nodes: {
       shape: 'dot',
-      size: 16,
+      size: 15,
       font: {
         size: 14,
         color: '#000000'
       },
-      borderWidth: 2
+      borderWidth: 2,
+      color: '#000000',
+      // fixed: true
     },
     edges: {
       width: 2,
-      color: {
-        color: '#848484',
-        highlight: '#848484',
-        hover: '#848484'
-      },
+      color: { color: '#000000' },
       smooth: {
-        enabled: false,  // これで直線になります
+        enabled: false,
         type: "continuous"
       }
     },
     physics: {
-      enabled: false  // 物理シミュレーションを無効にします
+      enabled: true
     }
   };
-  var network = new vis.Network(container, data, options);
+
+  
+  let network = new vis.Network(container, data, options);
+}
+
+let graphInfo = document.getElementById("graphInfo");
+let drawButton = document.getElementById("drawButton");
+
+drawButton.addEventListener('click', drawButtonClick);
+
+let container = document.getElementById('mynetwork');
+  
+  
 </script>
 </body>
 </html>
