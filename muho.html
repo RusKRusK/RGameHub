@@ -5,10 +5,20 @@
 <meta charset="utf-8">
 <link rel="icon" href="images/favicon.ico">
 <link rel="stylesheet" href="style.css" type="text/css">
+<script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+  <!-- index.jsを読み込む -->
+  <script type="module" src="muho.js"></script>
 </head>
 <body>
 <header>
-    <div class="logo">ナダルの███、███</div>
+    <div class="logo">test</div>
 </header>
 <div class="marquee-anim">
     <p class="marquee-span" style="position: relative;left: 50px;">↓紣䌨</p>
@@ -18,5 +28,6 @@
     width: 512px;
     " class="marquee-span">
 </div>
+<canvas id="myCanvas"></canvas>
 </body>
 </html>
