@@ -63,7 +63,7 @@
               size: 14,
               color: '#000000'
             },
-            borderWidth: 0,
+            borderWidth: 2,
             color: '#000000',
             // fixed: true
           },
@@ -93,6 +93,7 @@
         }
 
         function updateGraph() {
+            positions = network.getPositions();
             let input = document.getElementById('graphInput').value.trim();
             if (input === '') {
                 nodes.clear();
@@ -108,15 +109,15 @@
             let newNodes = [];
             let newEdges = [];
 
-            positions = network.getPositions();
-
-            // Create nodes
+            // 頂点の生成
             for (let i = 1; i <= vertexCount; i++) {
-                let newPosition = positions[i-1] || getRandomPosition();
-                newNodes.push({ id: i, label: String(i), x: newPosition.x, y: newPosition.y });
+                if (positions[i] === undefined) {
+                    positions[i] = getRandomPosition();
+                }
+                newNodes.push({ id: i, label: String(i), x: positions[i].x, y: positions[i].y, fixed: { x: true, y: true } });
             }
             
-            // Create edges
+            // 辺の生成
             for (let i = 1; i < lines.length; i++) {
                 let parts = lines[i].trim().split(' ');
                 if (parts.length === 2) {
@@ -128,11 +129,19 @@
                 }
             }
 
-            // Update nodes and edges
             nodes.clear();
             edges.clear();
             nodes.add(newNodes);
             edges.add(newEdges);
+
+            network.once('stabilizationIterationsDone', function() {
+                positions = network.getPositions();
+                newNodes.forEach(function(node) {
+                    nodes.update({ id: node.id, fixed: false });
+                });
+            });
+
+            network.stabilize();
         }
 
         document.getElementById('graphInput').addEventListener('keydown', (event) => {
