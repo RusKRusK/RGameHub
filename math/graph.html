@@ -34,8 +34,6 @@
 5 1</textarea><br>
     <input type="button" id="redrawGraph" value="再描画する">
     <input type="checkbox" id="isPhysics" checked>物理演算を有効化 <input type="checkbox" id="isLabel" checked>ラベルを表示する<br>
-    <input type="range" id="nodeSize" min="1" max="20" step="1" value="5">頂点の大きさ：<span id="currentNodeSize"></span><br>
-    <input type="range" id="edgeSize" min="1" max="20" step="1" value="2">　辺の大きさ：<span id="currentEdgeSize"></span>
     <div id="mynetwork"></div>
     <div style="padding: 10px; margin-bottom: 10px; border: 5px double #333333;">
         無向グラフを描画します．<br>
@@ -165,29 +163,12 @@
             network.setOptions({nodes: {font: { size: 14*document.getElementById('isLabel').checked}}});
         });
 
-        let nodeSize = document.getElementById('nodeSize');
-        let currentNodeSize = document.getElementById('currentNodeSize');
-        let edgeSize = document.getElementById('edgeSize');
-        let currentEdgeSize = document.getElementById('currentEdgeSize');
-        nodeSize.addEventListener('input', () => {
-            currentNodeSize.innerText = nodeSize.value;
-            network.setOptions({nodes: {size: nodeSize.value}});
-        });
-        edgeSize.addEventListener('input', () => {
-            currentEdgeSize.innerText = edgeSize.value;
-            network.setOptions({edges: {width: edgeSize.value}});
-        });
-
-
-
         document.addEventListener("DOMContentLoaded", () => {
             renderMathInElement(document.body, {delimiters: [
                 {left: "\\[", right: "\\]", display: true},
                 {left: "$", right: "$", display: false}
             ]});
             updateGraph();
-            currentNodeSize.innerText = nodeSize.value;
-            currentEdgeSize.innerText = edgeSize.value;
         });
   
     </script>
