@@ -41,16 +41,30 @@ function getRandomPosition() {
 
 function determinant(matrix) {
     const n = matrix.length;
-    if (n === 1) return matrix[0][0];
-    if (n === 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
-    let det = 0;
-    for (let col = 0; col < n; col++) {
-        const subMatrix = matrix.slice(1).map(row => row.filter((_, j) => j !== col));
-        det += matrix[0][col] * determinant(subMatrix) * (col % 2 === 0 ? 1 : -1);
+    let det = 1;
+    for (let i = 0; i < n; i++) {
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+            if (Math.abs(matrix[k][i]) > Math.abs(matrix[maxRow][i])) {
+                maxRow = k;
+            }
+        }
+        if (i !== maxRow) {
+            [matrix[i], matrix[maxRow]] = [matrix[maxRow], matrix[i]];
+            det *= -1;
+        }
+        if (matrix[i][i] === 0) return 0;
+
+        for (let k = i + 1; k < n; k++) {
+            const factor = matrix[k][i] / matrix[i][i];
+            for (let j = i; j < n; j++) {
+                matrix[k][j] -= factor * matrix[i][j];
+            }
+        }
+        det *= matrix[i][i];
     }
     return det;
 }
-
 
 adjMatrix = document.getElementById('adjMatrix');
 
