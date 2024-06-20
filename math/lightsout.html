@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>無向グラフの描画</title>
+    <title>ライツアウトグラフ</title>
     <link rel="icon" href="../images/favicon.ico">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
@@ -22,7 +22,8 @@
 </head>
 <body>
     <h1>グラフ版ライツアウト</h1>
-    <textarea id="graphInput" placeholder="muho">
+    <a href="https://mathlog.info/articles/QaEKWCvHPi9bOD2ggFZa">ライツアウトグラフについて</a>(Mathlogの記事に飛びます.)
+    <textarea id="graphInput" placeholder="グラフの情報を入力">
 7
 1 1 0 0 1 1 1
 1 2
@@ -38,8 +39,16 @@
 </textarea><br>
     <input type="button" id="redrawGraph" value="再描画する">
     <input type="checkbox" id="isPhysics">物理演算を有効化 <input type="checkbox" id="isLabel">ラベルを表示する<br>
-    <p id="muho"></p>
+    <p id="solvability"></p>
     <div id="mynetwork"></div>
+    <div style="padding: 10px; margin-bottom: 10px; border: 5px double #333333;">
+        <details open>
+            <summary>隣接行列$A$と，$A+I$とその行列式</summary>
+                <p id="adjMatrix"></p>
+                <p id="adjMatrix2"></p>
+                <p id="determinant"></p>
+        </details>
+    </div>
     <div style="padding: 10px; margin-bottom: 10px; border: 5px double #333333;">
         無向グラフを描画します．<br>
         頂点数 $n$ の無向グラフの各頂点 $a_1,a_2,\cdots,a_n$ について，<br><br>
@@ -56,172 +65,14 @@
         各頂点をクリックするとクリックした頂点と，隣接する頂点の白黒が入れ替わります．全部の頂点を白色にできたらクリアです(クリアしても何もありません)
     </div>
 
+    <script type="text/javascript" src="lightsout.js"></script>
     <script type="text/javascript">
-        let nodes = new vis.DataSet([]);
-        let edges = new vis.DataSet([]);
-        let container = document.getElementById('mynetwork');
-        let data = { nodes: nodes, edges: edges };
-        let options = {
-          nodes: {
-            shape: 'dot',
-            size: 15,
-            font: {
-              size: 0,
-              color: '#000000'
-            },
-            borderWidth: 2,
-            // color: '#000000',
-            // fixed: true
-          },
-          edges: {
-            width: 2,
-            color: { color: '#000000' },
-            smooth: {
-              enabled: false,
-              type: "continuous"
-            }
-          },
-          physics: {
-            enabled: false,
-            stabilization: false
-          }
-        };
-        let network = new vis.Network(container, data, options);
-
-        let positions = {};
-
-        function getRandomPosition() {
-            let range = 400;
-            return {
-                x: Math.random() * range - range / 2,
-                y: Math.random() * range - range / 2
-            };
-        }
-
-        muho = document.getElementById('muho');
-
-        function updateGraph() {
-            positions = network.getPositions();
-            let input = document.getElementById('graphInput').value.trim();
-            if (input === '') {
-                nodes.clear();
-                edges.clear();
-                positions = {};
-                return;
-            }
-            
-            let lines = input.split('\n');
-            let vertexCount = parseInt(lines[0], 10);
-            if (isNaN(vertexCount)) return;
-            
-            let newNodes = [];
-            let newEdges = [];
-
-            // 頂点の生成
-            let col = lines[1].trim().split(' ');
-            if (col.length === vertexCount){
-                for (let i = 1; i <= vertexCount; i++) {
-                    if (positions[i] === undefined) {
-                        positions[i] = getRandomPosition();
-                    }
-                    let c;
-                    if (col[i-1] === '0'){
-                        c = '#FFFFFF';
-                    }
-                    else if(col[i-1] === '1'){
-                        c = '#000000';
-                    }
-                    newNodes.push({
-                        id: i,
-                        label: String(i),
-                        x: positions[i].x, y: positions[i].y,
-                        fixed: { x: true, y: true },
-                        color: c 
-                    });
-                }
-            }
-            // 辺の生成
-            for (let i = 2; i < lines.length; i++) {
-                let parts = lines[i].trim().split(' ');
-                if (parts.length === 2) {
-                    let from = parseInt(parts[0], 10);
-                    let to = parseInt(parts[1], 10);
-                    if (!isNaN(from) && !isNaN(to)) {
-                        newEdges.push({ from: from, to: to });
-                    }
-                }
-            }
-
-            nodes.clear();
-            edges.clear();
-            nodes.add(newNodes);
-            edges.add(newEdges);
-
-            network.once('stabilizationIterationsDone', function() {
-                positions = network.getPositions();
-                newNodes.forEach(function(node) {
-                    nodes.update({ id: node.id, fixed: false });
-                });
-            });
-
-            network.stabilize();
-        }
-
-        document.getElementById('graphInput').addEventListener('keydown', (event) => {
-            if (event.keyCode === 13) { // エンターが押されたら更新
-                updateGraph();
-            }
-        });
-
-        document.getElementById('redrawGraph').addEventListener('click',() => {
-            nodes.clear();
-            edges.clear();
-            positions = {};
-            updateGraph();
-        });
-
-        document.getElementById('isPhysics').addEventListener('click',() => {
-            network.setOptions({ physics: { enabled: document.getElementById('isPhysics').checked } });
-        });
-
-        document.getElementById('isLabel').addEventListener('click', () => {
-            network.setOptions({nodes: {font: { size: 14*document.getElementById('isLabel').checked}}});
-        });
-
-        network.on("click", (params) => {
-            if (params.nodes.length > 0) {
-            var clickedNodeId = params.nodes[0];
-            
-            // クリックされたノードの色を変更
-            if (nodes.get(clickedNodeId).color === '#FFFFFF'){
-                nodes.update({ id: clickedNodeId, color: '#000000' });
-            }
-            else{
-                nodes.update({ id: clickedNodeId, color: '#FFFFFF' });
-            }
-
-            
-            // 接続されたノードを取得して色を変更
-            var connectedNodes = network.getConnectedNodes(clickedNodeId);
-            connectedNodes.forEach((nodeId) => {
-                if (nodes.get(nodeId).color === '#FFFFFF'){
-                    nodes.update({ id: nodeId, color: '#000000' });
-                }
-                else{
-                    nodes.update({ id: nodeId, color: '#FFFFFF' });
-                }
-            });
-            }
-        });
-
         document.addEventListener("DOMContentLoaded", () => {
             renderMathInElement(document.body, {delimiters: [
                 {left: "\\[", right: "\\]", display: true},
                 {left: "$", right: "$", display: false}
             ]});
-            updateGraph();
         });
-  
     </script>
 </body>
 </html>
