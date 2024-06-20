@@ -166,7 +166,7 @@ function updateGraph() {
     latexMatrix2 += modifiedMatrix.map(row => row.join(' & ')).join(' \\\\\n');
     latexMatrix2 += '\n\\end{pmatrix}';
 
-    const det = determinantGauss(modifiedMatrix);
+    const det = Math.round(determinantGauss(modifiedMatrix));
 
     const container = document.getElementById('adjMatrix');
     const container2 = document.getElementById('adjMatrix2');
