@@ -39,7 +39,7 @@ function getRandomPosition() {
     };
 }
 
-function determinant(matrix) {
+function determinantGauss(matrix) {
     const n = matrix.length;
     let det = 1;
     for (let i = 0; i < n; i++) {
@@ -151,7 +151,7 @@ function updateGraph() {
         });
     });
     
-    const det = determinant(modifiedMatrix);
+    const det = determinantGauss(modifiedMatrix);
 
     let latexMatrix = 'A=\\begin{pmatrix}\n';
         latexMatrix += adjacencyMatrix.map(row => row.join(' & ')).join(' \\\\\n');
