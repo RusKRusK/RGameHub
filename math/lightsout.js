@@ -153,10 +153,10 @@ function updateGraph() {
         adjacencyMatrix[b - 1][a - 1] = 1; // 無向グラフの場合
     });
     
-    let modifiedMatrix = adjacencyMatrix.concat();
-
-    
-    const det = determinantGauss(modifiedMatrix);
+    const modifiedMatrix = copyMatrix(adjacencyMatrix);
+    for (let i=0;i<vertexCount;i++){
+        modifiedMatrix[i][i]=1;
+    }
 
     let latexMatrix = 'A=\\begin{pmatrix}\n';
         latexMatrix += adjacencyMatrix.map(row => row.join(' & ')).join(' \\\\\n');
@@ -165,6 +165,8 @@ function updateGraph() {
     let latexMatrix2 = 'A+I=\\begin{pmatrix}\n';
     latexMatrix2 += modifiedMatrix.map(row => row.join(' & ')).join(' \\\\\n');
     latexMatrix2 += '\n\\end{pmatrix}';
+
+    const det = determinantGauss(modifiedMatrix);
 
     const container = document.getElementById('adjMatrix');
     const container2 = document.getElementById('adjMatrix2');
