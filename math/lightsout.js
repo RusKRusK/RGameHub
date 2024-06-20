@@ -66,6 +66,14 @@ function determinantGauss(matrix) {
     return det;
 }
 
+function copyMatrix(base) {
+    const result = [];
+    for (const line of base) {
+      result.push([...line]);
+    }
+    return result;
+  }
+
 adjMatrix = document.getElementById('adjMatrix');
 
 function updateGraph() {
@@ -145,11 +153,8 @@ function updateGraph() {
         adjacencyMatrix[b - 1][a - 1] = 1; // 無向グラフの場合
     });
     
-    const modifiedMatrix = adjacencyMatrix.map((row, i) => {
-        return row.map((value, j) => {
-            return i === j ? value + 1 : value;
-        });
-    });
+    let modifiedMatrix = adjacencyMatrix.concat();
+
     
     const det = determinantGauss(modifiedMatrix);
 
