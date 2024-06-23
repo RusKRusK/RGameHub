@@ -1,0 +1,27 @@
+.keyboard div {
+    position: relative;
+    width: 40px;
+    height: 200px;
+    float: left;
+  }
+  
+  .keyboard button {
+    position: absolute;
+  }
+  
+  .white {
+    background-color: #ffffff;
+    border: 1px solid #c0c0c0;
+    width: 40px;
+    height:200px;
+  }
+  
+  .black {
+    background-color: #000000;
+    border: 1px solid #c0c0c0;
+    width: 30px;
+    height: 120px;
+    left: 25px;
+    z-index: 1;
+  }
+  
